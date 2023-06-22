@@ -1,0 +1,9 @@
+tensorflow
+Keras
+numpy
+opencv-python
+scikit-learn
+scikit-image
+np_utils
+h5py
+grpcio==1.41.1
