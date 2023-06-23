@@ -455,7 +455,7 @@ class LoginComponent extends Component {
                         </View> :
 
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            <Image style={{ width: 100, height: 100 }} source={Assets.AppLogo} />
+                            <Image style={{ width: 'auto', height: 'auto' }} source={Assets.AppLogo} />
                         </View>
 
                     }
