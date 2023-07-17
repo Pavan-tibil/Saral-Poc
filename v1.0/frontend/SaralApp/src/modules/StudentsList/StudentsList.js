@@ -52,7 +52,6 @@ const StudentsList = ({
     roiData
 }) => {
 
-
     function usePrevious(value) {
         const ref = useRef();
         useEffect(() => {
@@ -124,6 +123,7 @@ useEffect(() => {
                         getRoiCache.push(payload);
                     }
                     await setRegularRoiApi(getRoiCache);
+                    console.log('set ROI cache... 1');
                 } else {
                     let payload = {
                         key :`${loginData.data.school.schoolId}`,
@@ -134,7 +134,11 @@ useEffect(() => {
                         payload.set = setValue
                     }
                     await setRegularRoiApi([payload]);
+                    console.log('set ROI cache... 2');
                 }
+
+                console.log('set ROI cache... 3');
+                if (filteredData.subject === 'attendance') navigateToNext();
             }
         }
     }, [roiData])
@@ -514,6 +518,8 @@ useEffect(() => {
         }
     }
 
+    console.log('Printing FilteredData', filteredData);
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
              <ShareComponent
@@ -587,6 +593,7 @@ useEffect(() => {
             }
         </SafeAreaView>
     );
+
 }
 
 const mapStateToProps = (state) => {

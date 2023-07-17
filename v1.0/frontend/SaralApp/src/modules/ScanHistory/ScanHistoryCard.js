@@ -133,6 +133,7 @@ const ScanHistoryCard = ({
                                     }
                                 })
                             })
+                            console.log('filterData[0]', filterData[0]);
                             let apiObj = new SaveScanData(filterData[0], loginData.data.token);
                             saveScanData(apiObj, filterDataLen, setIntolocalAfterFilter);
                         } else {
@@ -284,6 +285,8 @@ const ScanHistoryCard = ({
     ExamQuesDetail = studentsAndExamData.data&&studentsAndExamData.data.exams.filter(function (item) {
         return item.subject == filteredData.response.subject && item.examId == filteredData.response.examTestID;
     })
+
+    console.log('logging filtered data from scanhistory...', filteredData);
     return (
         <View>
             <TouchableOpacity
