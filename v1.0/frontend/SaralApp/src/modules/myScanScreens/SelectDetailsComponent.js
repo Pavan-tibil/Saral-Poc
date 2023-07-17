@@ -862,7 +862,7 @@ dispatchStudentExamData(payload){
                 let obj = {
                     className: selectedClass,
                     class: selectedClassId,
-                    examDate: examDate[subIndex],
+                    examDate: subjectsData[subIndex].split(' ')[0] === 'attendance' ? this.state.selectedDate.split("-").reverse().join("/") : examDate[subIndex],
                     section: selectedSection,
                     subject: subjectsData[subIndex],
                     examTestID: examTestID[subIndex],
