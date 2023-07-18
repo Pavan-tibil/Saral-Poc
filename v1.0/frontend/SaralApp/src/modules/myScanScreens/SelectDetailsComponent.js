@@ -293,7 +293,16 @@ class SelectDetailsComponent extends Component {
                 selectedSubject: value,
                 ExamSetArray : this.state.set,
                 setIndex: hasSetData
-            })
+            });
+
+            console.log('selected sub', value);
+
+            if (value.split(' ')[0] === 'attendance') {
+                this.setState({
+                    dateVisible: true,
+                 //   ExamSetArray: []
+                })
+            }
         }
          
         else if (type == 'set') {
@@ -539,7 +548,7 @@ dispatchStudentExamData(payload){
                                     let subjects = []
                                     let set =[]
                                     _.filter(studentsAndExamData.data.exams, function (o) {
-                                        subArr.push(o.subject + " " + o.examDate)
+                                        o.subject === 'attendance' ? subArr.push(o.subject) : subArr.push(o.subject + " " + o.examDate)
                                         testID.push(o.examId)
                                         examDates.push(o.examDate)
                                         subjects.push(o.subject)
@@ -763,7 +772,13 @@ dispatchStudentExamData(payload){
                         })
                         finalStudentsAndExamArr.push(obj)
                         let studentsExamDataSaved = await setStudentsExamData(finalStudentsAndExamArr)
+                        // if (this.state.selectedSubject === 'attendance') {
+                        //     this.props.navigation.push('ScanHistory');
+                        // } else {
+                        //     this.props.navigation.push('StudentsList');
+                        // }
                         this.props.navigation.push('StudentsList');
+
                     }
                 } else if (!hasNetworkData) {
                     this.callCustomModal(Strings.message_text, Strings.you_dont_have_cache, false);
@@ -847,12 +862,12 @@ dispatchStudentExamData(payload){
                 let obj = {
                     className: selectedClass,
                     class: selectedClassId,
-                    examDate: examDate[subIndex],
+                    examDate: subjectsData[subIndex].split(' ')[0] === 'attendance' ? this.state.selectedDate.split("-").reverse().join("/") : examDate[subIndex],
                     section: selectedSection,
                     subject: subjectsData[subIndex],
-            
                     examTestID: examTestID[subIndex],
                 }
+                if (subjectsData[subIndex].split(' ')[0] === 'attendance') obj.attendance_date = this.state.selectedDate.split("-").reverse().join("/");
                 if(setValue.length>0){
                     obj.set=  selectSet =="NONE" ? "" : setValue
                 }
@@ -1059,7 +1074,7 @@ dispatchStudentExamData(payload){
                             }
 
                       {
-                            ExamSetArray && ExamSetArray.length > 0 && ExamSetArray[subIndex] != null &&
+                           (selectedSubject !== 'attendance') && ExamSetArray && ExamSetArray.length > 0 && ExamSetArray[subIndex] != null &&
                                 <View style={[styles.fieldContainerStyle, {bottom:25, paddingBottom: subIndex != -1 ? '10%' : '10%' }]}>
                                     <View style={{ flexDirection: 'row' }}>
                                         <Text style={[styles.labelTextStyle]}>{BrandLabel && BrandLabel.Set ? BrandLabel.Set : Strings.set_text}</Text>
