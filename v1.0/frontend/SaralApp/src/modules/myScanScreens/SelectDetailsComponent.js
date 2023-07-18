@@ -43,6 +43,7 @@ const clearState = {
     sectionList: [],
     sectionListIndex: -1,
     setIndex: 0,
+    dayTypeIndex: 0,
     selectedSection: '',
     pickerDate: new Date(),
     selectedDate: '',
@@ -58,6 +59,7 @@ const clearState = {
     errDate: '',
     errSection: '',
     selectedClassId: '',
+    selectedDayType: '',
     calledStudentsData: false,
     sectionValid: false,
     username: '',
@@ -92,6 +94,7 @@ class SelectDetailsComponent extends Component {
             sectionList: [],
             sectionListIndex: -1,
             setIndex: 0,
+            dayTypeIndex: 0,
             selectedSection: '',
             pickerDate: new Date(),
             selectedDate: '',
@@ -99,6 +102,7 @@ class SelectDetailsComponent extends Component {
             examTestID: [],
             subIndex: -1,
             selectedSubject: '',
+            selectedDayType: '',
             selectSet: '',
             setArr: [],
             errClass: '',
@@ -182,6 +186,11 @@ class SelectDetailsComponent extends Component {
         return true
     }
 
+    navBack() {
+        const { navigation } = this.props;
+        navigation.goBack();
+        return true
+    }
 
 
     loader = (flag) => {
@@ -300,6 +309,8 @@ class SelectDetailsComponent extends Component {
             if (value.split(' ')[0] === 'attendance') {
                 this.setState({
                     dateVisible: true,
+                    dayTypeIndex: 0,
+                    selectedDayType: 'Working Day'
                  //   ExamSetArray: []
                 })
             }
@@ -322,6 +333,16 @@ class SelectDetailsComponent extends Component {
                 errSet: '',
                 setIndex: Number(index),
                 selectSet: value
+            })
+        } else if (type == 'day') {
+            this.setState({
+                errClass: '',
+                errSection: '',
+                errSub: '',
+                errDate: '',
+                errSet: '',
+                dayTypeIndex: Number(index),
+                selectedDayType: value
             })
         }
     }
@@ -843,7 +864,7 @@ dispatchStudentExamData(payload){
     }
 
     onSubmitClick = () => {
-        const { selectedClass, selectedClassId, selectedSection, examTestID, subIndex, examDate, subjectsData ,selectSet,setIndex} = this.state
+        const { selectedClass, selectedClassId, selectedSection, examTestID, subIndex, examDate, subjectsData ,selectSet, setIndex, selectedDayType} = this.state
         const { loginData } = this.props
        
         this.setState({
@@ -856,18 +877,30 @@ dispatchStudentExamData(payload){
             let valid = this.validateFields()
            
             if (valid) {
+
+                if (subjectsData[subIndex] === 'attendance' && selectedDayType === 'Holiday') {
+                    this.callCustomModal(Strings.message_text, "Holiday has been recorded for the date " + this.state.selectedDate.split("-").reverse().join("/"), false, this.navBack);
+                    this.setState({
+                        isLoading: false
+                    });
+                    return;
+                }
+
                 let selectedset = []
                 selectedset.push(selectSet)
                 let setValue = selectSet.length > 0 ? selectSet[subIndex].length > 0 ? selectSet[subIndex] : '' : ''
                 let obj = {
                     className: selectedClass,
                     class: selectedClassId,
-                    examDate: subjectsData[subIndex].split(' ')[0] === 'attendance' ? this.state.selectedDate.split("-").reverse().join("/") : examDate[subIndex],
+                    examDate: subjectsData[subIndex] === 'attendance' ? this.state.selectedDate.split("-").reverse().join("/") : examDate[subIndex],
                     section: selectedSection,
                     subject: subjectsData[subIndex],
                     examTestID: examTestID[subIndex],
                 }
-                if (subjectsData[subIndex].split(' ')[0] === 'attendance') obj.attendance_date = this.state.selectedDate.split("-").reverse().join("/");
+                if (subjectsData[subIndex] === 'attendance') {
+                    obj.attendance_date = this.state.selectedDate.split("-").reverse().join("/");
+                    obj.day_type = selectedDayType;
+                }
                 if(setValue.length>0){
                     obj.set=  selectSet =="NONE" ? "" : setValue
                 }
@@ -969,7 +1002,7 @@ dispatchStudentExamData(payload){
      
 
     render() {
-        const { navigation, isLoading, defaultSelected, classList, classListIndex, selectedClass, sectionList,setIndex,set,ExamSetArray, sectionListIndex, selectedSection, pickerDate, selectedDate, subArr, selectedSubject,selectSet, subIndex, errClass, errSub,errSet, errDate, errSection, sectionValid, dateVisible, examTestID,examSetData,disabled } = this.state
+        const { navigation, isLoading, defaultSelected, classList, classListIndex, selectedClass, sectionList,setIndex,set,ExamSetArray, sectionListIndex, selectedSection, pickerDate, selectedDate, subArr, selectedSubject,selectSet, subIndex, errClass, errSub,errSet, errDate, errSection, sectionValid, dateVisible, examTestID,examSetData,disabled, selectedDayType, dayTypeIndex } = this.state
         const { loginData, multiBrandingData, modalStatus, modalMessage ,studentsAndExamData} = this.props
         const BrandLabel = multiBrandingData && multiBrandingData.screenLabels && multiBrandingData.screenLabels.selectDetails[0]
         return (
@@ -1083,11 +1116,30 @@ dispatchStudentExamData(payload){
     
                                     <DropDownMenu
                                         options={(["NONE"]).concat(ExamSetArray[subIndex])}
-                                        onSelect={(idx, value) => this.onDropDownSelect(idx, value, 'set')}
+                                        onSelect={(idx, value) => this.onDropDownSelect(idx, value, 'day')}
                                         defaultData={ExamSetArray &&  ExamSetArray[subIndex] =="" ? ["NONE"] : defaultSelected}
                                         defaultIndex={setIndex}
                                         selectedData={selectSet}
                                         disabled = {ExamSetArray &&  ExamSetArray[subIndex] =="" ? !disabled : disabled}
+                                        icon={require('../../assets/images/arrow_down.png')}
+                                    />
+                                </View>
+                            }
+
+                            {
+                                (selectedSubject === 'attendance') &&
+                                <View style={[styles.fieldContainerStyle, {bottom:25, paddingBottom: subIndex != -1 ? '10%' : '10%' }]}>
+                                    <View style={{ flexDirection: 'row' }}>
+                                        <Text style={[styles.labelTextStyle]}>{BrandLabel && BrandLabel.Set ? BrandLabel.Set : 'Type'}</Text>
+                                        {errSet != '' && <Text style={[styles.labelTextStyle, { color: AppTheme.ERROR_RED, fontSize: AppTheme.FONT_SIZE_TINY + 1, width: '50%', textAlign: 'right', fontWeight: 'normal' }]}>{errSet}</Text>}
+                                    </View>
+    
+                                    <DropDownMenu
+                                        options={['Working day', 'Holiday']}
+                                        onSelect={(idx, value) => this.onDropDownSelect(idx, value, 'day')}
+                                        defaultData={'Working day'}
+                                        defaultIndex={dayTypeIndex}
+                                        selectedData={selectedDayType}
                                         icon={require('../../assets/images/arrow_down.png')}
                                     />
                                 </View>
