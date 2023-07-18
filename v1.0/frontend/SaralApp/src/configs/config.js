@@ -1,5 +1,5 @@
 const configs = {
-  BASE_URL: 'TO_BE_REPLACED'
+  BASE_URL: 'http://localhost:3000'
 }
 
 export default configs;
