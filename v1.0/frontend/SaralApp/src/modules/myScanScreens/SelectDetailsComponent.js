@@ -312,6 +312,14 @@ class SelectDetailsComponent extends Component {
                     dayTypeIndex: 0,
                     selectedDayType: 'Working Day'
                  //   ExamSetArray: []
+                //    ExamSetArray: []
+                })
+            }
+
+            if (value.split(' ')[0] === 'book-distribution') {
+                this.setState({
+                    dateVisible: false,
+                //    ExamSetArray: []
                 })
             }
         }
@@ -569,7 +577,7 @@ dispatchStudentExamData(payload){
                                     let subjects = []
                                     let set =[]
                                     _.filter(studentsAndExamData.data.exams, function (o) {
-                                        o.subject === 'attendance' ? subArr.push(o.subject) : subArr.push(o.subject + " " + o.examDate)
+                                        o.subject === 'attendance' || o.subject === 'book-distribution' ? subArr.push(o.subject) : subArr.push(o.subject + " " + o.examDate)
                                         testID.push(o.examId)
                                         examDates.push(o.examDate)
                                         subjects.push(o.subject)
@@ -810,6 +818,7 @@ dispatchStudentExamData(payload){
 
     validateFields = () => {
         const { classListIndex, subIndex, sectionListIndex, sectionValid ,setIndex,ExamSetArray} = this.state
+       
         const { scanTypeData } = this.props
         if (classListIndex == -1) {
             this.setState({
@@ -1107,7 +1116,7 @@ dispatchStudentExamData(payload){
                             }
 
                       {
-                           (selectedSubject !== 'attendance') && ExamSetArray && ExamSetArray.length > 0 && ExamSetArray[subIndex] != null &&
+                           (selectedSubject !== 'attendance' && selectedSubject !== 'book-distribution') && ExamSetArray && ExamSetArray.length > 0 && ExamSetArray[subIndex] != null &&
                                 <View style={[styles.fieldContainerStyle, {bottom:25, paddingBottom: subIndex != -1 ? '10%' : '10%' }]}>
                                     <View style={{ flexDirection: 'row' }}>
                                         <Text style={[styles.labelTextStyle]}>{BrandLabel && BrandLabel.Set ? BrandLabel.Set : Strings.set_text}</Text>
