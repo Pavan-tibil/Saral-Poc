@@ -54,6 +54,16 @@ const marksSchema = new mongoose.Schema({
         required: false,
         trim: true
     },
+    attendance_date: {
+        type: String,
+        required: false,
+        trim: true
+    },
+    set: {
+        type: String,
+        required: false,
+        trim: true
+    },
     marksInfo: [
         {
             _id: false,
@@ -62,7 +72,8 @@ const marksSchema = new mongoose.Schema({
             predictionConfidence: {type: Array,required: false},
             tags: {type: Array,required: false},
             obtainedMarks: { type: String, required: false  },
-            trainingData: {type: Array,required: false}
+            trainingData: {type: Array,required: false},
+            attendance_date: { type: String, required: false, trim: true }
           }
         ],
     totalMarks: {
