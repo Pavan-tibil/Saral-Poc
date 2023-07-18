@@ -165,6 +165,23 @@ const StudentsDataComponent = ({
         }
     }
 
+
+    if (filteredData.subject === 'attendance' || filteredData.subject === 'book-distribution' ) {
+        
+    return (
+        <View style={[styles.cardCon, { backgroundColor: themeColor1 ? themeColor1 : AppTheme.BLUE }]}>
+            <View style={[styles.cardChildCon, { backgroundColor: "#ffffffED" }]}>
+
+                <Text style={styles.aadhar}>{item.studentId}</Text>
+                <View style={styles.line} />
+                <Text style={styles.aadhar}>{item.name}</Text>
+                <View style={styles.line} />
+
+            </View>
+        </View>
+    );
+     }
+
     return (
         <View style={[styles.cardCon, { backgroundColor: themeColor1 ? themeColor1 : AppTheme.BLUE }]}>
             <View style={[styles.cardChildCon, { backgroundColor: "#ffffffED" }]}>

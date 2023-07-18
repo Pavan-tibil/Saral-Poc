@@ -287,6 +287,500 @@ const ScanHistoryCard = ({
     })
 
     console.log('logging filtered data from scanhistory...', filteredData);
+    if (filteredData.response.subject === 'attendance') {
+        Strings.Exam_Type = 'Template Type';
+        return (
+            <View>
+                <TouchableOpacity
+                    style={[styles.container, { backgroundColor: themeColor1 ? themeColor1 : AppTheme.BLUE }]}
+                    disabled
+    
+                >
+                    <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', paddingTop: '3%', paddingLeft: '1%', paddingRight: '1%', marginBottom:10}}>
+                        <View>
+                            <View style={styles.scanCardStyle}>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelKeyStyle]}>
+                                    <Text style={{fontFamily : monospace_FF}}>{BrandLabel&&BrandLabel.Class ? BrandLabel.Class : Strings.class_text}</Text>
+                                </View>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelValueStyle]}>
+                                    <Text style={{fontFamily : monospace_FF}} >{filteredData.response.className}</Text>
+                                </View>
+                            </View>
+                            <View style={styles.scanCardStyle}>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelKeyStyle]}>
+                                    <Text style={{fontFamily : monospace_FF}} >{BrandLabel && BrandLabel.Section ? BrandLabel.Section:Strings.section}</Text>
+                                </View>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelValueStyle]}>
+                                    <Text style={{fontFamily : monospace_FF}} >{filteredData.response.section}</Text>
+                                </View>
+                            </View>
+                            
+                            <View style={styles.scanCardStyle}>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelKeyStyle]}>
+                                    <Text style={{fontFamily : monospace_FF}} >{BrandLabel&&BrandLabel.Subject ? BrandLabel.Subject:Strings.subject}</Text>
+                                </View>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelValueStyle]}>
+                                    <Text style={{fontFamily : monospace_FF}} >{filteredData.response.subject}</Text>
+                                </View>
+                            </View>
+                          
+                            <View style={styles.scanCardStyle}>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelKeyStyle,]}>
+                                    <Text style={{fontFamily : monospace_FF}} >{Strings.scan_status}</Text>
+                                </View>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelValueStyle,]}>
+                                    <Text style={{fontFamily : monospace_FF}} >{scanStatusData}</Text>
+                                </View>
+                            </View>
+
+                            <View style={styles.scanCardStyle}>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelKeyStyle, { borderBottomWidth: 1 }]}>
+                                    <Text style={{fontFamily : monospace_FF}} >{Strings.save_status}</Text>
+                                </View>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelValueStyle, { borderBottomWidth: 1 }]}>
+                                    {loading ?
+                                        <Text style={{fontFamily : monospace_FF}} >{getSaveCount()}</Text> : <View style={{ alignItems: 'flex-start' }}><ActivityIndicator size={'small'} color={'grey'} /></View>}
+                                </View>
+                            </View>
+    
+                            <View style={styles.scanCardStyle}>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelKeyStyle, { borderBottomWidth: 1, borderTopWidth: 0 }]}>
+                                    <Text>{Strings.absent_status}</Text>
+                                </View>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelValueStyle, { borderBottomWidth: 1, borderTopWidth: 0 }]}>
+                                    <Text>{studentCount.absentCount} of {studentCount.totalCount}</Text>
+                                </View>
+                            </View>
+    
+                        </View>
+                    </View>
+    
+                    <View style={{ marginBottom: '3%', width: '100%', alignItems: 'center' }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
+                            {
+                                showButtons
+                                &&
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor: AppTheme.WHITE, borderRadius: 4,
+    
+                                        width: true ? '45%' : '80%',
+                                        alignItems: 'center', justifyContent: 'center', elevation: 8, paddingVertical: 4,
+                                        marginLeft: 5,
+                                        marginRight: 5
+                                    }}
+                                    onPress={onPressStatus}
+                                >
+                                    <Text  style={{fontFamily : monospace_FF}}>{Strings.save_status}</Text>
+                                </TouchableOpacity>
+                            }
+                            {
+                                showButtons
+                                &&
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor: AppTheme.WHITE, borderRadius: 4, width: '45%',
+                                        alignItems: 'center', justifyContent: 'center', elevation: 8, paddingVertical: 4,
+                                        marginLeft: 5,
+                                        marginRight: 5
+                                    }}
+                                    onPress={onPressSaveInDB}
+                                >
+                                    <Text  style={{fontFamily : monospace_FF, color: AppTheme.BLACK}}>{Strings.save_scan}</Text>
+                                </TouchableOpacity>}
+                        </View>
+                    </View>
+    
+                    {
+                        showButtons
+                        &&
+                        <View style={{ marginBottom: '5%', marginTop: '2%', width: '100%', alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor: AppTheme.WHITE, borderRadius: 4,
+    
+                                        width: true ? '45%' : '80%',
+                                        alignItems: 'center', justifyContent: 'center', elevation: 8, paddingVertical: 4,
+                                        marginLeft: 5,
+                                        marginRight: 5
+                                    }}
+                                    onPress={onPressContinue}
+                                >
+                                    <Text style={{ fontFamily: monospace_FF, color: AppTheme.BLACK }} >{Strings.continue_scan}</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    }
+    
+                    <View style={{ marginBottom: '3%', width: '100%', alignItems: 'center' }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
+                            {
+                                scanstatusbutton
+                                &&
+    
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor: AppTheme.WHITE, borderRadius: 4,
+    
+                                        width: true ? '45%' : '80%',
+                                        alignItems: 'center', justifyContent: 'center', elevation: 8, paddingVertical: 4,
+                                        marginLeft: 5,
+                                        marginRight: 5
+                                    }}
+                                    onPress={onPressScanStatus}
+                                >
+                                    <Text style={{ fontFamily: monospace_FF, color: AppTheme.BLACK }}>{Strings.scan_status}</Text>
+                                </TouchableOpacity>
+    
+                            }
+                            {
+                                scanstatusbutton
+                                &&
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor: AppTheme.WHITE, borderRadius: 4, width: '45%',
+                                        alignItems: 'center', justifyContent: 'center', elevation: 8, paddingVertical: 4,
+                                        marginLeft: 5,
+                                        marginRight: 5
+                                    }}
+                                    onPress={onPressSaveInDB}
+                                >
+                                    <Text style={{ fontFamily: monospace_FF, color: AppTheme.BLACK }}>{Strings.save_scan}</Text>
+                                </TouchableOpacity>}
+                        </View>
+                    </View>
+    
+    
+    
+                </TouchableOpacity>
+    
+                <Modal
+                    transparent={true}
+                    animationType='fade'
+                    visible={isModalVisible}
+                >
+                    <View style={{ backgroundColor: '#fff', flex: 1 }}>
+                        <ScrollView scrollEnabled showsVerticalScrollIndicator={false}>
+                            <View style={[styles1.container1, { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 }]}>
+                                {
+                                    ExamDetaildata && ExamDetaildata.length > 0 ?
+                                    ExamDetaildata.map((data) => {
+                                        return (
+                                            <ExamDetailsPopup
+                                                customRowStyle={{ width: '30%', backgroundColor: AppTheme.TABLE_HEADER }}
+                                                key={data}
+                                                rowTitle={data}
+                                                rowBorderColor={AppTheme.TAB_BORDER}
+    
+                                            />
+                                        )
+                                    })
+                                    :
+    
+                                    Exam_QuestionHeader.map((data) => {
+                                        return (
+                                            <ExamDetailsPopup
+                                                customRowStyle={{ width: '30%', backgroundColor: AppTheme.TABLE_HEADER }}
+                                                key={data}
+                                                rowTitle={data}
+                                                rowBorderColor={AppTheme.TAB_BORDER}
+    
+                                            />
+                                        )
+                                    })
+                                }
+                            </View>
+                            <View style={styles1.container1}>
+                                {ExamQuesDetail&&ExamQuesDetail[0]&&ExamQuesDetail[0].questions != undefined && 
+                                    ExamQuesDetail[0].questions != "" ?
+                                    ExamQuesDetail[0] && ExamQuesDetail[0].questions.map((stu) => {
+                                    return (
+                                        <View key={stu} style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+    
+                                            <ExamDetailsPopup
+                                                customRowStyle={{ width: '30%', }}
+                                                rowTitle={ stu.questionId}
+                                                rowBorderColor={AppTheme.INACTIVE_BTN_TEXT}
+                                            />
+                                            <ExamDetailsPopup
+                                                customRowStyle={{ width: '30%', }}
+                                                rowTitle={stu.indicatorTitle}
+                                                rowBorderColor={AppTheme.INACTIVE_BTN_TEXT}
+                                            />
+                                            <ExamDetailsPopup
+                                                customRowStyle={{ width: '30%', }}
+                                                rowTitle={stu.questionMarks}
+                                                rowBorderColor={AppTheme.INACTIVE_BTN_TEXT}
+                                            />
+                                        </View>
+                                    )
+                                }): <View style={{ alignItems: 'center', marginTop: 80 }}><Text>Data not found</Text></View>}
+                            </View>
+                        </ScrollView>
+                        <View >
+                            <ButtonComponent
+                                customBtnStyle={[styles1.nxtBtnStyle, { backgroundColor: themeColor1 ? themeColor1 : AppTheme.BLUE }]}
+                                btnText={Strings.close.toUpperCase()}
+                                activeOpacity={0.8}
+                                onPress={() => setIsModalVisible(!isModalVisible)}
+                            />
+                        </View>
+                    </View>
+                </Modal>
+            </View>
+    
+        );
+    }
+
+    if (filteredData.response.subject === 'book-distribution') {
+        Strings.Exam_Type = 'Template Type';
+        return (
+            <View>
+                <TouchableOpacity
+                    style={[styles.container, { backgroundColor: themeColor1 ? themeColor1 : AppTheme.BLUE }]}
+                    disabled
+    
+                >
+                    <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center', paddingTop: '3%', paddingLeft: '1%', paddingRight: '1%', marginBottom:10}}>
+                        <View>
+                            <View style={styles.scanCardStyle}>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelKeyStyle]}>
+                                    <Text style={{fontFamily : monospace_FF}}>{BrandLabel&&BrandLabel.Class ? BrandLabel.Class : Strings.class_text}</Text>
+                                </View>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelValueStyle]}>
+                                    <Text style={{fontFamily : monospace_FF}} >{filteredData.response.className}</Text>
+                                </View>
+                            </View>
+                            <View style={styles.scanCardStyle}>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelKeyStyle]}>
+                                    <Text style={{fontFamily : monospace_FF}} >{BrandLabel && BrandLabel.Section ? BrandLabel.Section:Strings.section}</Text>
+                                </View>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelValueStyle]}>
+                                    <Text style={{fontFamily : monospace_FF}} >{filteredData.response.section}</Text>
+                                </View>
+                            </View>
+                            
+                            <View style={styles.scanCardStyle}>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelKeyStyle]}>
+                                    <Text style={{fontFamily : monospace_FF}} >{BrandLabel&&BrandLabel.Subject ? BrandLabel.Subject:Strings.subject}</Text>
+                                </View>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelValueStyle]}>
+                                    <Text style={{fontFamily : monospace_FF}} >{filteredData.response.subject}</Text>
+                                </View>
+                            </View>
+                          
+                            <View style={styles.scanCardStyle}>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelKeyStyle,]}>
+                                    <Text style={{fontFamily : monospace_FF}} >{Strings.scan_status}</Text>
+                                </View>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelValueStyle,]}>
+                                    <Text style={{fontFamily : monospace_FF}} >{scanStatusData}</Text>
+                                </View>
+                            </View>
+                            
+                            <View style={styles.scanCardStyle}>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelKeyStyle, { borderBottomWidth: 1 }]}>
+                                    <Text style={{fontFamily : monospace_FF}} >{Strings.save_status}</Text>
+                                </View>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelValueStyle, { borderBottomWidth: 1 }]}>
+                                    {loading ?
+                                        <Text style={{fontFamily : monospace_FF}} >{getSaveCount()}</Text> : <View style={{ alignItems: 'flex-start' }}><ActivityIndicator size={'small'} color={'grey'} /></View>}
+                                </View>
+                            </View>
+    
+                            {/* <View style={styles.scanCardStyle}>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelKeyStyle, { borderBottomWidth: 1, borderTopWidth: 0 }]}>
+                                    <Text>{Strings.absent_status}</Text>
+                                </View>
+                                <View style={[styles.scanLabelStyle, styles.scanLabelValueStyle, { borderBottomWidth: 1, borderTopWidth: 0 }]}>
+                                    <Text>{studentCount.absentCount} of {studentCount.totalCount}</Text>
+                                </View>
+                            </View> */}
+    
+                        </View>
+                    </View>
+    
+                    <View style={{ marginBottom: '3%', width: '100%', alignItems: 'center' }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
+                            {
+                                showButtons
+                                &&
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor: AppTheme.WHITE, borderRadius: 4,
+    
+                                        width: true ? '45%' : '80%',
+                                        alignItems: 'center', justifyContent: 'center', elevation: 8, paddingVertical: 4,
+                                        marginLeft: 5,
+                                        marginRight: 5
+                                    }}
+                                    onPress={onPressStatus}
+                                >
+                                    <Text  style={{fontFamily : monospace_FF}}>{Strings.save_status}</Text>
+                                </TouchableOpacity>
+                            }
+                            {
+                                showButtons
+                                &&
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor: AppTheme.WHITE, borderRadius: 4, width: '45%',
+                                        alignItems: 'center', justifyContent: 'center', elevation: 8, paddingVertical: 4,
+                                        marginLeft: 5,
+                                        marginRight: 5
+                                    }}
+                                    onPress={onPressSaveInDB}
+                                >
+                                    <Text  style={{fontFamily : monospace_FF, color: AppTheme.BLACK}}>{Strings.save_scan}</Text>
+                                </TouchableOpacity>}
+                        </View>
+                    </View>
+    
+                    {
+                        showButtons
+                        &&
+                        <View style={{ marginBottom: '5%', marginTop: '2%', width: '100%', alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor: AppTheme.WHITE, borderRadius: 4,
+    
+                                        width: true ? '45%' : '80%',
+                                        alignItems: 'center', justifyContent: 'center', elevation: 8, paddingVertical: 4,
+                                        marginLeft: 5,
+                                        marginRight: 5
+                                    }}
+                                    onPress={onPressContinue}
+                                >
+                                    <Text style={{ fontFamily: monospace_FF, color: AppTheme.BLACK }} >{Strings.continue_scan}</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    }
+    
+                    <View style={{ marginBottom: '3%', width: '100%', alignItems: 'center' }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', width: '100%' }}>
+                            {
+                                scanstatusbutton
+                                &&
+    
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor: AppTheme.WHITE, borderRadius: 4,
+    
+                                        width: true ? '45%' : '80%',
+                                        alignItems: 'center', justifyContent: 'center', elevation: 8, paddingVertical: 4,
+                                        marginLeft: 5,
+                                        marginRight: 5
+                                    }}
+                                    onPress={onPressScanStatus}
+                                >
+                                    <Text style={{ fontFamily: monospace_FF, color: AppTheme.BLACK }}>{Strings.scan_status}</Text>
+                                </TouchableOpacity>
+    
+                            }
+                            {
+                                scanstatusbutton
+                                &&
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor: AppTheme.WHITE, borderRadius: 4, width: '45%',
+                                        alignItems: 'center', justifyContent: 'center', elevation: 8, paddingVertical: 4,
+                                        marginLeft: 5,
+                                        marginRight: 5
+                                    }}
+                                    onPress={onPressSaveInDB}
+                                >
+                                    <Text style={{ fontFamily: monospace_FF, color: AppTheme.BLACK }}>{Strings.save_scan}</Text>
+                                </TouchableOpacity>}
+                        </View>
+                    </View>
+    
+    
+    
+                </TouchableOpacity>
+    
+                <Modal
+                    transparent={true}
+                    animationType='fade'
+                    visible={isModalVisible}
+                >
+                    <View style={{ backgroundColor: '#fff', flex: 1 }}>
+                        <ScrollView scrollEnabled showsVerticalScrollIndicator={false}>
+                            <View style={[styles1.container1, { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 }]}>
+                                {
+                                    ExamDetaildata && ExamDetaildata.length > 0 ?
+                                    ExamDetaildata.map((data) => {
+                                        return (
+                                            <ExamDetailsPopup
+                                                customRowStyle={{ width: '30%', backgroundColor: AppTheme.TABLE_HEADER }}
+                                                key={data}
+                                                rowTitle={data}
+                                                rowBorderColor={AppTheme.TAB_BORDER}
+    
+                                            />
+                                        )
+                                    })
+                                    :
+    
+                                    Exam_QuestionHeader.map((data) => {
+                                        return (
+                                            <ExamDetailsPopup
+                                                customRowStyle={{ width: '30%', backgroundColor: AppTheme.TABLE_HEADER }}
+                                                key={data}
+                                                rowTitle={data}
+                                                rowBorderColor={AppTheme.TAB_BORDER}
+    
+                                            />
+                                        )
+                                    })
+                                }
+                            </View>
+                            <View style={styles1.container1}>
+                                {ExamQuesDetail&&ExamQuesDetail[0]&&ExamQuesDetail[0].questions != undefined && 
+                                    ExamQuesDetail[0].questions != "" ?
+                                    ExamQuesDetail[0] && ExamQuesDetail[0].questions.map((stu) => {
+                                    return (
+                                        <View key={stu} style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+    
+                                            <ExamDetailsPopup
+                                                customRowStyle={{ width: '30%', }}
+                                                rowTitle={ stu.questionId}
+                                                rowBorderColor={AppTheme.INACTIVE_BTN_TEXT}
+                                            />
+                                            <ExamDetailsPopup
+                                                customRowStyle={{ width: '30%', }}
+                                                rowTitle={stu.indicatorTitle}
+                                                rowBorderColor={AppTheme.INACTIVE_BTN_TEXT}
+                                            />
+                                            <ExamDetailsPopup
+                                                customRowStyle={{ width: '30%', }}
+                                                rowTitle={stu.questionMarks}
+                                                rowBorderColor={AppTheme.INACTIVE_BTN_TEXT}
+                                            />
+                                        </View>
+                                    )
+                                }): <View style={{ alignItems: 'center', marginTop: 80 }}><Text>Data not found</Text></View>}
+                            </View>
+                        </ScrollView>
+                        <View >
+                            <ButtonComponent
+                                customBtnStyle={[styles1.nxtBtnStyle, { backgroundColor: themeColor1 ? themeColor1 : AppTheme.BLUE }]}
+                                btnText={Strings.close.toUpperCase()}
+                                activeOpacity={0.8}
+                                onPress={() => setIsModalVisible(!isModalVisible)}
+                            />
+                        </View>
+                    </View>
+                </Modal>
+            </View>
+    
+        );
+    }
+
+
+
     return (
         <View>
             <TouchableOpacity
