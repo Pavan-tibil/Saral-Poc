@@ -898,7 +898,7 @@ dispatchStudentExamData(payload){
                     let q = new Date(this.state.selectedDate);
 
                     if (dt.getFullYear() !== q.getFullYear() || dt.getMonth() !== q.getMonth() || dt.getDate() !== q.getDate()) {
-                        this.callCustomModal(Strings.message_text, "Attendance can be recorded for only for the current date", false);
+                        this.callCustomModal(Strings.message_text, "Scanning for attendance will be limited to the present date only", false);
                         this.setState({
                             isLoading: false
                         });
