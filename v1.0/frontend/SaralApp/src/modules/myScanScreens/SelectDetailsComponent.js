@@ -879,7 +879,7 @@ dispatchStudentExamData(payload){
             if (valid) {
 
                 if (subjectsData[subIndex] === 'attendance' && selectedDayType === 'Holiday') {
-                    this.callCustomModal(Strings.message_text, "Holiday has been recorded for the date " + this.state.selectedDate.split("-").reverse().join("/"), false, this.navBack);
+                    this.callCustomModal(Strings.message_text, "As today is a holiday, the attendance will be recorded and stored as a holiday", false, this.navBack);
                     this.setState({
                         isLoading: false
                     });
