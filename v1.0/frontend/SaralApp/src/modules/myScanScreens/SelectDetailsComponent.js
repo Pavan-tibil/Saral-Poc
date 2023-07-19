@@ -893,6 +893,17 @@ dispatchStudentExamData(payload){
                         isLoading: false
                     });
                     return;
+                } else if (subjectsData[subIndex] === 'attendance') {
+                    let dt = new Date();
+                    let q = new Date(this.state.selectedDate);
+
+                    if (dt.getFullYear() !== q.getFullYear() || dt.getMonth() !== q.getMonth() || dt.getDate() !== q.getDate()) {
+                        this.callCustomModal(Strings.message_text, "Attendance can be recorded for only for the current date", false);
+                        this.setState({
+                            isLoading: false
+                        });
+                        return;
+                    }
                 }
 
                 let selectedset = []
