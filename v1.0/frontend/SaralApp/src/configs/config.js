@@ -1,5 +1,5 @@
 const configs = {
-  BASE_URL: 'http://localhost:3000'
+  BASE_URL: 'https://saral-demo.tibilprojects.com'
 }
 
 export default configs;
