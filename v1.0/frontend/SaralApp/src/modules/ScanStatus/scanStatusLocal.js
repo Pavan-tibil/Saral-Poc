@@ -110,6 +110,7 @@ const callCustomModal = (title, message, isAvailable, func, cancel) => {
             loacalstutlist={unsavedstudentList}
             themeColor1={multiBrandingData ? multiBrandingData.themeColor1 : AppTheme.BLUE}
             BrandLabel={BrandLabel}
+            filteredData={filteredData}
         />
 
     }

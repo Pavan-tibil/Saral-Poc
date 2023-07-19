@@ -16,7 +16,8 @@ const ScanStatusLocalList = ({
     status = "Saved",
     Review = "Review",
     minimalFlag = false,
-    BrandLabel
+    BrandLabel,
+    filteredData
 }) => {
     const [modalVisible, setModalVisible] = useState(false)
     let studentName = loacalstutlist.filter((e) => {
@@ -28,7 +29,23 @@ const ScanStatusLocalList = ({
     const renderSRNo = (m, i) => {
         return `${i + 1}`
     }
+
+    const checkLabelData = (data) => {
+        if (filteredData.subject === 'attendance') {
+            if (data === 'Obtained Marks') {
+                return 'Obtained Attendance'
+            } else if (data === 'Question') {
+                return 'ID'
+            } else if (data === 'Predicted Marks') {
+                return 'Predicted Attendance'
+            } else return data;
+        } else {
+            return data;
+        }
+   }
   
+    console.log('filtered data', filteredData);
+
     return (
         <View style={[styles.container, { backgroundColor: themeColor1 ? themeColor1 : AppTheme.GREEN }]}>
             <View style={styles.childCon}>
@@ -67,8 +84,8 @@ const ScanStatusLocalList = ({
                         <Text style={styles.textStyle}>{`studentId : `}<Text style={{fontWeight:'normal',fontFamily : monospace_FF}}>{`${scanitemdata&&scanitemdata.studentId}`}</Text></Text>
                         <Text style={styles.textStyle}>{`predictedStudentId : ` }<Text style={{fontWeight:'normal',fontFamily : monospace_FF}}>{`${scanitemdata&&scanitemdata.predictedStudentId ? scanitemdata.predictedStudentId : ''}`}</Text></Text>
                         <Text style={styles.textStyle}>{`section : ` }<Text style={{fontWeight:'normal',fontFamily : monospace_FF}}>{`${scanitemdata&&scanitemdata.section}`}</Text></Text>
-                        <Text style={styles.textStyle}>{`studentAvailability : ` }<Text style={{fontWeight:'normal',fontFamily : monospace_FF}}>{`${scanitemdata&&scanitemdata.studentAvailability}`}</Text></Text>
-                        <Text style={styles.textStyle}>{`marksInfo : `}</Text>
+                        {/* <Text style={styles.textStyle}>{`studentAvailability : ` }<Text style={{fontWeight:'normal',fontFamily : monospace_FF}}>{`${scanitemdata&&scanitemdata.studentAvailability}`}</Text></Text>
+                        <Text style={styles.textStyle}>{`marksInfo : `}</Text> */}
 
                         <View style={{ flexDirection: 'row', marginTop: 20 }}>
                             {
@@ -82,19 +99,19 @@ const ScanStatusLocalList = ({
                                />
                                <MarksHeaderTable
                                  customRowStyle={{width:width/4.5, backgroundColor: AppTheme.TABLE_HEADER}}
-                                 rowTitle={ BrandLabel && BrandLabel.questionId || MARKS_INFO.questionId}
+                                 rowTitle={ BrandLabel && BrandLabel.questionId || ( filteredData.subject === 'attendance' ? 'ID' : MARKS_INFO.questionId)}
                                  rowBorderColor={AppTheme.TAB_BORDER}
                                  editable={false}
                                />
                                <MarksHeaderTable
                                  customRowStyle={{ width:width/4.5, backgroundColor: AppTheme.TABLE_HEADER}}
-                                 rowTitle={ BrandLabel && BrandLabel.obtainedMarks || MARKS_INFO.obtainedMarks}
+                                 rowTitle={ BrandLabel && BrandLabel.obtainedMarks ||  ( filteredData.subject === 'attendance' ? 'Obtained Attendance' :  MARKS_INFO.obtainedMarks)}
                                  rowBorderColor={AppTheme.TAB_BORDER}
                                  editable={false}
                                />
                                 <MarksHeaderTable
                                  customRowStyle={{ width:width/4.5, backgroundColor: AppTheme.TABLE_HEADER}}
-                                 rowTitle={ BrandLabel && BrandLabel.predictedMarks || MARKS_INFO.predictedMarks}
+                                 rowTitle={ BrandLabel && BrandLabel.predictedMarks || ( filteredData.subject === 'attendance' ? 'Predicted Attendance' :  MARKS_INFO.predictedMarks)}
                                  rowBorderColor={AppTheme.TAB_BORDER}
                                  editable={false}
                                />
@@ -104,8 +121,8 @@ const ScanStatusLocalList = ({
                                 return (
                                     <MarksHeaderTable
                                         customRowStyle={{ width:width/4.5, backgroundColor: AppTheme.TABLE_HEADER }}
-                                        key={data}
-                                        rowTitle={data}
+                                        key={checkLabelData(data)}
+                                        rowTitle={checkLabelData(data)}
                                         rowBorderColor={AppTheme.TAB_BORDER}
                                         editable={false}
                                     />
