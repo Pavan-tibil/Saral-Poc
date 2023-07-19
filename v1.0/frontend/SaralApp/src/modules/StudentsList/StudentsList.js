@@ -138,7 +138,7 @@ useEffect(() => {
                 }
 
                 console.log('set ROI cache... 3');
-                if (filteredData.subject === 'attendance') navigateToNext();
+                // if (filteredData.subject === 'attendance') navigateToNext();
             }
         }
     }, [roiData])
