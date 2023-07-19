@@ -1304,7 +1304,7 @@ const ScannedDetailsComponent = ({
     const checkLabelData = (data) => {
         if (filteredData.subject === 'attendance') {
             if (data === 'Questions') {
-                return 'Days'
+                return 'Date'
             } else if (data === 'Marks') {
                 return 'Attendance'
             } else return data;
@@ -1353,7 +1353,7 @@ const ScannedDetailsComponent = ({
    }
 
    if (filteredData.subject === 'attendance') {
-        defaultHeaderTable.questions = "Days";
+        defaultHeaderTable.questions = "Date";
         defaultHeaderTable.marks = "Attendance";
         if (!isAttendanceAlertDisplayed) {
             setisAttendanceAlertDisplayed(true);
