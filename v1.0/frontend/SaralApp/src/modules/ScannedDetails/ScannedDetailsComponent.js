@@ -83,6 +83,8 @@ const ScannedDetailsComponent = ({
     const [isOmrOptions, setOmrOptions] = useState(false)
     const [isAlphaNumeric, setIsAlphaNumeric] = useState(false)
     const [filterData, setFilterData] = useState({data: [], len: 0})
+
+    const [isAttendanceAlertDisplayed, setisAttendanceAlertDisplayed] = useState(false);
     
 
     const BrandLabel = multiBrandingData && multiBrandingData.screenLabels && multiBrandingData.screenLabels.scannedDetailComponent[0]
@@ -1299,12 +1301,64 @@ const ScannedDetailsComponent = ({
         }
     }
 
+    const checkLabelData = (data) => {
+        if (filteredData.subject === 'attendance') {
+            if (data === 'Questions') {
+                return 'Days'
+            } else if (data === 'Marks') {
+                return 'Absent'
+            } else return data;
+        } else {
+            return data;
+        }
+   }
+
+   const checkRowValue = (data) => {
+    if (filteredData.subject === 'attendance') {
+        let dt = filteredData.examDate.split('/')[0];
+        let rp = null;
+        if (Number(dt) < 11) {
+            rp = '0';
+        } else if (Number(dt) > 10 && Number(dt) < 21) {
+            rp = '1';
+        } else {
+            rp = '2';
+        }
+        if (data.includes('D')) {
+            data = data.replace(/D/g, rp);
+            if (data.length === 3) {
+                if (rp === '0') {
+                    data = '10';
+                } else if (rp === '1') {
+                    data = '20';
+                } else {
+                    data = '30';
+                }
+            }
+            return data;
+        } else {
+            return data;
+        }
+    } else {
+        return data;
+    }
+   }
+
     const scrollRef = useRef();
     const goToTop = () => {
     scrollRef.current?.scrollTo({
     y: 0,
     animated: true,
     });
+   }
+
+   if (filteredData.subject === 'attendance') {
+        defaultHeaderTable.questions = "Days";
+        defaultHeaderTable.marks = "Absent";
+        if (!isAttendanceAlertDisplayed) {
+            setisAttendanceAlertDisplayed(true);
+            callCustomModal(Strings.message_text, "Since the attendance is captured for the current day, any marked entries for future days and holidays will not be stored", false);
+        }
    }
 
     return (
@@ -1327,7 +1381,7 @@ const ScannedDetailsComponent = ({
                         <View>
                             <View style={styles.container1}>
                                 <Text style={styles.header1TextStyle}>
-                                    {Strings.complete_these_steps_submit_marks}
+                                    { filteredData.subject === 'attendance' ? Strings.complete_these_steps_submit_attendance : Strings.complete_these_steps_submit_marks}
                                 </Text>
                             </View>
                             <View style={styles.container2}>
@@ -1361,7 +1415,10 @@ const ScannedDetailsComponent = ({
                                                         {
                                                             !minimalFlag
                                                             &&
+                                                            filteredData.subject !== 'attendance' ?
                                                             <Text style={styles.nameTextStyle}>{BrandLabel && BrandLabel.Exam ? BrandLabel.Exam : Strings.Exam} : {filteredData.subject} {filteredData.examDate} ({filteredData.examTestID})</Text>
+                                                            :
+                                                            <Text style={styles.nameTextStyle}>{Strings.AttendanceDate} : {filteredData.examDate} </Text>
 
                                                         }
                                                     {
@@ -1442,8 +1499,8 @@ const ScannedDetailsComponent = ({
                               return (
                                 <MarksHeaderTable
                                   customRowStyle={{ width: '30%', backgroundColor: AppTheme.TABLE_HEADER }}
-                                  key={data}
-                                  rowTitle={data}
+                                  key={checkLabelData(data)}
+                                  rowTitle={checkLabelData(data)}
                                   rowBorderColor={AppTheme.TAB_BORDER}
                                   editable={false}
                                 />
@@ -1467,7 +1524,7 @@ const ScannedDetailsComponent = ({
                                                             />
                                                             <MarksHeaderTable
                                                                 customRowStyle={{height:height/12, width: loginData.data.school.tags ? '25%' : isAlphaNumeric ? '25%' : '30%', }}
-                                                                rowTitle={element.format.value}
+                                                                rowTitle={checkRowValue(element.format.value)}
                                                                 rowBorderColor={AppTheme.INACTIVE_BTN_TEXT}
                                                                 editable={false}
                                                                 keyboardType={'number-pad'}
