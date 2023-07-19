@@ -1357,7 +1357,7 @@ const ScannedDetailsComponent = ({
         defaultHeaderTable.marks = "Attendance";
         if (!isAttendanceAlertDisplayed) {
             setisAttendanceAlertDisplayed(true);
-            callCustomModal(Strings.message_text, "Since the attendance is captured for the current day, any marked entries for future days and holidays will not be stored", false);
+            callCustomModal(Strings.message_text, "As the attendance is recorded for the present day, any marked entries for other days will not be stored", false);
         }
    }
 
