@@ -1306,7 +1306,7 @@ const ScannedDetailsComponent = ({
             if (data === 'Questions') {
                 return 'Days'
             } else if (data === 'Marks') {
-                return 'Absent'
+                return 'Attendance'
             } else return data;
         } else {
             return data;
@@ -1354,7 +1354,7 @@ const ScannedDetailsComponent = ({
 
    if (filteredData.subject === 'attendance') {
         defaultHeaderTable.questions = "Days";
-        defaultHeaderTable.marks = "Absent";
+        defaultHeaderTable.marks = "Attendance";
         if (!isAttendanceAlertDisplayed) {
             setisAttendanceAlertDisplayed(true);
             callCustomModal(Strings.message_text, "Since the attendance is captured for the current day, any marked entries for future days and holidays will not be stored", false);
