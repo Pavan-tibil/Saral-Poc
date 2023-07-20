@@ -82,11 +82,17 @@ exports.saveMarks = async (req, res, next) => {
                     }
                         
                     // console.log(marks[0]);
-                    data.marksInfo.length = (splited_day)
-                    console.log(data.marksInfo);
-                    data.marksInfo[data.marksInfo.length - 1].attendance_date = data.attendance_date
+                    // data.marksInfo.length = (splited_day)
+                    // console.log(data.marksInfo[4]);
+                    let temp = data.marksInfo[splited_day-1]
+                    data.marksInfo = []
+                    temp.attendance_date = data.attendance_date
+                    data.marksInfo.push(temp)
+                    // console.log(data);
+                    // console.log("thissssssssssssssssssssssssssssss",data.marksInfo);
+                    // data.marksInfo[data.marksInfo.length - 1].attendance_date = data.attendance_date
                     // data.marksInfo[0].attendance_date = data.examDate
-                    console.log(data); 
+                    // console.log(data); 
                     // console.log("new data####################");
                     await Mark.create(data) 
                 } else {
