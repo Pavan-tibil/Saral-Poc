@@ -47,7 +47,9 @@ exports.saveMarks = async (req, res, next) => {
         const foundItem = marks.find(item => item.subject === subjectToFind);
         console.log("##############################",foundItem);
         if (foundItem) {
+            let a = 0;
             for (let data of marks) {
+                a++;
                 if (!data.examDate && data.examDate == undefined) {
                     data.examDate = new Date().toLocaleDateString()
                 }
@@ -63,15 +65,32 @@ exports.saveMarks = async (req, res, next) => {
                 else if (splited_date_first_10_days >= 21 && splited_date_first_10_days < 31) {
                     data.set = "C"
                 }
-
+                data.attendance_date = data.examDate
 
                 let studentMarksExist = await Mark.findOne({ schoolId: data.schoolId, studentId: data.studentId, classId: data.classId, subject: data.subject, roiId: data.roiId, set: data.set })
                 if (!studentMarksExist) {
+                    let splited_day = null
+                    if (data.set == "A") {
+                        splited_day = parseInt(data.examDate.split("/")[0])
+                    }
+                    if (data.set == "B" || data.set == "C") { 
+                        let splited_date_after_10_days = String(splited_date_first_10_days).split("")[1]
+                        splited_day = splited_date_after_10_days
+                        if (splited_date_first_10_days == 20 || splited_date_first_10_days == 30){
+                            splited_day = 10
+                        }
+                    }
+                        
+                    // console.log(marks[0]);
+                    data.marksInfo.length = (splited_day)
+                    console.log(data.marksInfo);
+                    data.marksInfo[data.marksInfo.length - 1].attendance_date = data.attendance_date
+                    // data.marksInfo[0].attendance_date = data.examDate
+                    console.log(data); 
                     // console.log("new data####################");
-                    await Mark.create(data)
+                    await Mark.create(data) 
                 } else {
                     if (data.subject == "attendance") {
-                        data.attendance_date = data.examDate
                         console.log("insideeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
                         if (data.schoolId == studentMarksExist.schoolId && data.studentId == studentMarksExist.studentId && data.classId == studentMarksExist.classId && data.subject == studentMarksExist.subject && data.set == studentMarksExist.set) {
 
@@ -84,35 +103,39 @@ exports.saveMarks = async (req, res, next) => {
                             let splited_date_first_10_days = parseInt(data.examDate.split("/")[0])
                             console.log("hereeeeeeeeeeeeeeeeeeeeeeeeeeeee", splited_date_first_10_days);
                             if (splited_date_first_10_days < 11) {
-                                data.marksInfo.length = splited_date_first_10_days
-                                data.marksInfo[data.marksInfo.length - 1].attendance_date = data.attendance_date
-                                let update = { $set: { studentIdTrainingData: data.studentIdTrainingData, predictedStudentId: data.predictedStudentId, studentAvailability: data.studentAvailability, marksInfo: data.marksInfo, maxMarksTrainingData: data.maxMarksTrainingData, maxMarksPredicted: data.maxMarksPredicted, securedMarks: data.securedMarks, totalMarks: data.totalMarks, obtainedMarksTrainingData: data.obtainedMarksTrainingData, obtainedMarksPredicted: data.obtainedMarksPredicted, set: data.set, userId: data.userId, attendance_date: data.attendance_date } }
+                                console.log("students exist##############",studentMarksExist);
+                                studentMarksExist.marksInfo.push(data.marksInfo[splited_date_first_10_days - 1])
+                                console.log(studentMarksExist);
+                                studentMarksExist.marksInfo[studentMarksExist.marksInfo.length- 1].attendance_date = data.attendance_date
+                                let update = { $set: { datastudentIdTrainingData: data.studentIdTrainingData, predictedStudentId: data.predictedStudentId, studentAvailability: data.studentAvailability, marksInfo: studentMarksExist.marksInfo, maxMarksTrainingData: data.maxMarksTrainingData, maxMarksPredicted: data.maxMarksPredicted, securedMarks: data.securedMarks, totalMarks: data.totalMarks, obtainedMarksTrainingData: data.obtainedMarksTrainingData, obtainedMarksPredicted: data.obtainedMarksPredicted, set: data.set, userId: data.userId} }
                                 await Mark.updateOne(lookup, update)
                             }
                             else if (splited_date_first_10_days >= 11 && splited_date_first_10_days < 20) {
-                                console.log("above 10 days######################");
-                                let splited_date_after_10_days = String(splited_date_first_10_days).split("")
-                                console.log(splited_date_after_10_days[0], splited_date_after_10_days[1]);
-                                data.marksInfo.length = splited_date_after_10_days[1]
-                                console.log("1st index######################", data.marksInfo[data.marksInfo.length - 1]);
-                                data.marksInfo[data.marksInfo.length - 1].attendance_date = data.attendance_date
-                                console.log("2nd indexxxxxxxxxxxxxxx", data.attendance_date)
-                                let update = { $set: { studentIdTrainingData: data.studentIdTrainingData, predictedStudentId: data.predictedStudentId, studentAvailability: data.studentAvailability, marksInfo: data.marksInfo, maxMarksTrainingData: data.maxMarksTrainingData, maxMarksPredicted: data.maxMarksPredicted, securedMarks: data.securedMarks, totalMarks: data.totalMarks, obtainedMarksTrainingData: data.obtainedMarksTrainingData, obtainedMarksPredicted: data.obtainedMarksPredicted, set: data.set, userId: data.userId, attendance_date: data.attendance_date } }
-                                await Mark.updateOne(lookup, update)
+                                let splited_date_after_10_days = String(splited_date_first_10_days).split("")[1]
+                                studentMarksExist.marksInfo.push(data.marksInfo[splited_date_after_10_days - 1])
+                                // console.log(db_data)
+                                studentMarksExist.marksInfo[studentMarksExist.marksInfo.length - 1].attendance_date = data.attendance_date
+                                // console.log(db_data)
+                                let update = { $set: { studentIdTrainingData: data.studentIdTrainingData, predictedStudentId: data.predictedStudentId, studentAvailability: data.studentAvailability, marksInfo: studentMarksExist.marksInfo, maxMarksTrainingData: data.maxMarksTrainingData, maxMarksPredicted: data.maxMarksPredicted, securedMarks: data.securedMarks, totalMarks: data.totalMarks, obtainedMarksTrainingData: data.obtainedMarksTrainingData, obtainedMarksPredicted: data.obtainedMarksPredicted, set: data.set, userId: data.userId} }
+                                await Mark.updateMany(lookup, update)
                             }
                             else if (splited_date_first_10_days >= 21 && splited_date_first_10_days < 30) {
-                                console.log("above 20 days######################");
                                 console.log(data.examDate, data.attendance_date);
-                                let splited_date_after_20_days = String(splited_date_first_10_days).split("")
-                                console.log(splited_date_after_20_days[0], splited_date_after_20_days[1]);
-                                data.marksInfo.length = splited_date_after_20_days[1]
-                                data.marksInfo[data.marksInfo.length - 1].attendance_date = data.attendance_date
-                                let update = { $set: { studentIdTrainingData: data.studentIdTrainingData, predictedStudentId: data.predictedStudentId, studentAvailability: data.studentAvailability, marksInfo: data.marksInfo, maxMarksTrainingData: data.maxMarksTrainingData, maxMarksPredicted: data.maxMarksPredicted, securedMarks: data.securedMarks, totalMarks: data.totalMarks, obtainedMarksTrainingData: data.obtainedMarksTrainingData, obtainedMarksPredicted: data.obtainedMarksPredicted, set: data.set, userId: data.userId, attendance_date: data.attendance_date } }
+                                let splited_date_after_20_days = String(splited_date_first_10_days).split("")[1]
+                                studentMarksExist.marksInfo.push(data.marksInfo[splited_date_after_20_days - 1])
+                                // data.marksInfo.length = splited_date_after_20_days[1]
+                                // data.marksInfo[data.marksInfo.length - 1].attendance_date = data.attendance_date
+                                studentMarksExist.marksInfo[studentMarksExist.marksInfo.length - 1].attendance_date = data.attendance_date
+                                let update = { $set: { studentIdTrainingData: data.studentIdTrainingData, predictedStudentId: data.predictedStudentId, studentAvailability: data.studentAvailability, marksInfo: studentMarksExist.marksInfo, maxMarksTrainingData: data.maxMarksTrainingData, maxMarksPredicted: data.maxMarksPredicted, securedMarks: data.securedMarks, totalMarks: data.totalMarks, obtainedMarksTrainingData: data.obtainedMarksTrainingData, obtainedMarksPredicted: data.obtainedMarksPredicted, set: data.set, userId: data.userId} }
                                 await Mark.updateOne(lookup, update)
                             }
                             else if (splited_date_first_10_days == 20 || splited_date_first_10_days == 30) {
-                                data.marksInfo[9].attendance_date = data.attendance_date
-                                let update = { $set: { studentIdTrainingData: data.studentIdTrainingData, predictedStudentId: data.predictedStudentId, studentAvailability: data.studentAvailability, marksInfo: data.marksInfo[9], maxMarksTrainingData: data.maxMarksTrainingData, maxMarksPredicted: data.maxMarksPredicted, securedMarks: data.securedMarks, totalMarks: data.totalMarks, obtainedMarksTrainingData: data.obtainedMarksTrainingData, obtainedMarksPredicted: data.obtainedMarksPredicted, set: data.set, userId: data.userId, attendance_date: data.attendance_date } }
+                                console.log(studentMarksExist.marksInfo);
+                                studentMarksExist.marksInfo.push(data.marksInfo[9])
+                                console.log("1st##########################",studentMarksExist);
+                                studentMarksExist.marksInfo[studentMarksExist.marksInfo.length - 1].attendance_date = data.attendance_date
+                                console.log("2nd##################",studentMarksExist);
+                                let update = { $set: { studentIdTrainingData: data.studentIdTrainingData, predictedStudentId: data.predictedStudentId, studentAvailability: data.studentAvailability, marksInfo: studentMarksExist.marksInfo, maxMarksTrainingData: data.maxMarksTrainingData, maxMarksPredicted: data.maxMarksPredicted, securedMarks: data.securedMarks, totalMarks: data.totalMarks, obtainedMarksTrainingData: data.obtainedMarksTrainingData, obtainedMarksPredicted: data.obtainedMarksPredicted, set: data.set, userId: data.userId} }
                                 await Mark.updateOne(lookup, update)
                             }
                             // else if (splited_date_first_10_days == 31) {
@@ -182,6 +205,7 @@ exports.saveMarks = async (req, res, next) => {
             res.status(500).json({ error: e.message })
         }
         else {
+            console.log(e);
             res.status(400).json({ e })
         }
     }
