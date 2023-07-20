@@ -1344,6 +1344,30 @@ const ScannedDetailsComponent = ({
     }
    }
 
+   const checkPredictionIndex = (data , i) => {
+    if (filteredData.subject === 'attendance') {
+        let dt = filteredData.examDate.split('/')[0];
+        let rp = null;
+        if (Number(dt) < 11) {
+            rp = Number(dt) - 1;
+        } else if (Number(dt) > 10 ) {
+            if (Number(dt) === 10 || Number(dt) === 20) {
+                rp = 9;
+            } else {
+                rp = Number(dt[1]) - 1;
+            }
+        }
+
+        if (i == rp) {
+           // console.log(i, rp, data, 'returning data');
+            return data;
+        } else {
+          //  console.log(i, rp, data, 'returning 0');
+            return '0';
+        }
+    } else return data;
+   }
+
     const scrollRef = useRef();
     const goToTop = () => {
     scrollRef.current?.scrollTo({
@@ -1531,7 +1555,7 @@ const ScannedDetailsComponent = ({
                                                             />
                                                             <MarksHeaderTable
                                                                 customRowStyle={{height:height/12, width: loginData.data.school.tags ? '25%' : isAlphaNumeric ? '50%' : '30%', }}
-                                                                rowTitle={element.consolidatedPrediction}
+                                                                rowTitle={checkPredictionIndex(element.consolidatedPrediction, index)}
                                                                 rowBorderColor={markBorderOnCell(element)}
                                                                 editable={true}
                                                                 keyboardType={element.hasOwnProperty("omrOptions") ?  'name' : 'name'}
