@@ -43,6 +43,30 @@ const ScanStatusLocalList = ({
             return data;
         }
    }
+
+   const checkPredictionIndex = (data , i) => {
+    if (filteredData.subject === 'attendance') {
+        let dt = filteredData.examDate.split('/')[0];
+        let rp = null;
+        if (Number(dt) < 11) {
+            rp = Number(dt) - 1;
+        } else if (Number(dt) > 10 ) {
+            if (Number(dt) === 10 || Number(dt) === 20) {
+                rp = 9;
+            } else {
+                rp = Number(dt[1]) - 1;
+            }
+        }
+
+        if (i == rp) {
+           // console.log(i, rp, data, 'returning data');
+            return data;
+        } else {
+           // console.log(i, rp, data, 'returning 0');
+            return '0';
+        }
+    } else return data;
+   }
   
     console.log('filtered data', filteredData);
 
@@ -152,14 +176,14 @@ const ScanStatusLocalList = ({
                                         />
                                         <MarksHeaderTable
                                             customRowStyle={{height:height/12,width:width/4.5 }}
-                                            rowTitle={M.obtainedMarks}
+                                            rowTitle={checkPredictionIndex(M.obtainedMarks, i)}
                                             rowBorderColor={AppTheme.INACTIVE_BTN_TEXT}
                                             editable={false}
                                             keyboardType={'number-pad'}
                                         />
                                         <MarksHeaderTable
                                             customRowStyle={{height:height/12,width:width/4.5 }}
-                                            rowTitle={M.predictedMarks}
+                                            rowTitle={checkPredictionIndex(M.predictedMarks, i)}
                                             rowBorderColor={AppTheme.INACTIVE_BTN_TEXT}
                                             editable={false}
                                             keyboardType={'number-pad'}
