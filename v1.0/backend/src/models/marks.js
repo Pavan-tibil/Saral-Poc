@@ -54,7 +54,12 @@ const marksSchema = new mongoose.Schema({
         required: false,
         trim: true
     },
-    attendance_date: {
+    attendance_month: {
+        type: String,
+        required: false,
+        trim: true
+    },
+    attendance_year: {
         type: String,
         required: false,
         trim: true
